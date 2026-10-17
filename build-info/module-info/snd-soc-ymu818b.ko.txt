@@ -1,0 +1,11 @@
+filename:       /home/ubuntu/brainux-bu26154-tests.rJh5BJ/build/linux-brain-audio-common-test1/sound/soc/codecs/snd-soc-ymu818b.ko
+license:        GPL
+author:         Codex
+description:    ASoC Yamaha YMU818B codec driver
+alias:          of:N*T*Cyamaha,ymu818bC*
+alias:          of:N*T*Cyamaha,ymu818b
+alias:          i2c:ymu818b
+depends:        
+intree:         Y
+name:           snd_soc_ymu818b
+vermagic:       5.4.149-brain-audio-common-test1 preempt mod_unload modversions ARMv5 p2v8 

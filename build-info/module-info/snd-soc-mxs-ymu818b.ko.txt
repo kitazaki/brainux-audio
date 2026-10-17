@@ -1,0 +1,10 @@
+filename:       /home/ubuntu/brainux-bu26154-tests.rJh5BJ/build/linux-brain-audio-common-test1/sound/soc/mxs/snd-soc-mxs-ymu818b.ko
+license:        GPL
+author:         Codex
+description:    MXS YMU818B ASoC machine driver
+alias:          of:N*T*Csharp,mxs-audio-ymu818bC*
+alias:          of:N*T*Csharp,mxs-audio-ymu818b
+depends:        
+intree:         Y
+name:           snd_soc_mxs_ymu818b
+vermagic:       5.4.149-brain-audio-common-test1 preempt mod_unload modversions ARMv5 p2v8 

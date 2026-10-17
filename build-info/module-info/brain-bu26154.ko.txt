@@ -1,0 +1,9 @@
+filename:       /home/ubuntu/brainux-bu26154-tests.rJh5BJ/build/linux-brain-audio-common-test1/sound/soc/mxs/brain-bu26154.ko
+description:    Experimental SHARP Brain BU26154 playback/capture
+license:        GPL
+alias:          of:N*T*Crohm,bu26154C*
+alias:          of:N*T*Crohm,bu26154
+depends:        
+intree:         Y
+name:           brain_bu26154
+vermagic:       5.4.149-brain-audio-common-test1 preempt mod_unload modversions ARMv5 p2v8 

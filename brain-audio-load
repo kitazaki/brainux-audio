@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+case "$(uname -r)" in
+    5.4.149-brain-audio-common-test1) ;;
+    *) echo 'This loader requires the common audio test1 kernel.' >&2; exit 1 ;;
+esac
+compatible=$(tr '\000' '\n' < /proc/device-tree/compatible)
+if printf '%s\n' "$compatible" | grep -Eq '^sharp,pw-sh[12]$'; then
+    /sbin/modprobe snd-soc-ymu818b
+    /sbin/modprobe snd-soc-mxs-ymu818b
+elif printf '%s\n' "$compatible" | grep -Eq '^sharp,pw-sh[3-7]$'; then
+    /sbin/modprobe brain-bu26154
+else
+    echo 'Unsupported device tree; audio modules were not loaded.' >&2
+    exit 1
+fi

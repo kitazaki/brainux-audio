@@ -1,0 +1,13 @@
+[Unit]
+Description=Load Brain audio modules for the active device tree
+After=systemd-udev-trigger.service systemd-modules-load.service
+Before=sound.target
+ConditionKernelVersion=5.4.149-brain-audio-common-test1
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/brain-audio-load
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
