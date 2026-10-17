@@ -8,9 +8,22 @@ PW-SH1〜SH7で本体スピーカー再生を確認した、Linux 5.4共通カ�
 - カーネルとモジュール一式は共通、DTBは機種別です。起動時にDTの情報から適切な音声モジュールを選びます。
 - 既存のLinux 5.4版Brainux SDカードとsystemd環境が必要です。OS全体のイメージではありません。
 
+**ビルドは不要です。** GitHubの「Code → Download ZIP」で取得し、Brainux上で展開したディレクトリから `sudo sh install.sh` を実行すると、バックアップを作成してカーネル・DTB・モジュール・自動ロード設定を配置します。完了後に手動で再起動してください。
+
+個別ダウンロード:
+
+- [カーネル zImage](boot/zImage) / [機種別DTB](boot/)
+- [PW-SH1/SH2: snd-soc-ymu818b.ko](modules/5.4.149-brain-audio-common-test1/kernel/sound/soc/codecs/snd-soc-ymu818b.ko)
+- [PW-SH1/SH2: snd-soc-mxs-ymu818b.ko](modules/5.4.149-brain-audio-common-test1/kernel/sound/soc/mxs/snd-soc-mxs-ymu818b.ko)
+- [PW-SH3〜SH7: brain-bu26154.ko](modules/5.4.149-brain-audio-common-test1/kernel/sound/soc/mxs/brain-bu26154.ko)
+- [対応モジュール一式（展開済み）](modules/5.4.149-brain-audio-common-test1/)
+
+個別ファイルの画面では「Download raw file」から保存できます。配置先と必要な起動設定は[導入手順](docs/INSTALL.md)を参照してください。モジュールは同梱カーネル専用です。
+
 | ファイル | 内容 |
 |---|---|
 | `boot/` | カーネルとSH1〜SH7用DTB |
+| `modules/` | 個別ダウンロードできるビルド済み `.ko` とモジュール情報 |
 | `modules-*.tar.gz` | 同じカーネル用モジュール一式（音声3モジュールを含む） |
 | `source/` | 音声ドライバー、DTソース、対応ソース全体を復元する差分 |
 | `build-info/` | ビルド設定・履歴・モジュール情報 |

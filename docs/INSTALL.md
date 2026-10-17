@@ -4,6 +4,8 @@
 
 systemdを使用するLinux 5.4版の既存Brainux環境向けです。リポジトリを取得・展開し、そのディレクトリで実行してください。OS全体のイメージではありません。作業前にSDカードのバックアップを保管してください。
 
+ビルド環境は不要です。GitHubの「Code → Download ZIP」で取得してBrainuxへコピーし、展開します（`unzip`がない場合はPCで展開してからコピーできます）。展開先で以下を実行します。
+
 ```sh
 sudo sh install.sh
 ```
@@ -13,6 +15,45 @@ sudo sh install.sh
 従来の `/etc/modules` と `/etc/modules-load.d/*.conf` にある対象音声モジュールの無条件ロード行を取り除き、`brain-audio.service` に切り替えます。新しいサービスはDTのcompatibleでロードするモジュールを選びます。YMU818BのDT/udevによる自動ロードと重なってもmodprobeは同じモジュールを重複登録しません。独自の音声起動スクリプトがある場合は、対象モジュールの無条件ロードが残らないよう確認してください。
 
 インストーラーは再起動・再生を開始しません。完了後に手動で再起動してください。
+
+```sh
+sudo reboot
+```
+
+## カーネル・DTB・koを手動で配置する場合
+
+`.ko`は `modules/5.4.149-brain-audio-common-test1/` 以下に展開済みで置いてあります。圧縮ファイルにも同じ内容が入っています。GitHubの個別ファイル画面の「Download raw file」からダウンロードできます。
+
+| ダウンロードするファイル | Brainuxでの配置先 |
+|---|---|
+| `boot/zImage` | `/boot/zImage` |
+| `boot/imx28-pwshN.dtb`（Nは機種番号1〜7） | `/boot/imx28-pwshN.dtb` |
+| `modules/5.4.149-brain-audio-common-test1/` の内容 | `/lib/modules/5.4.149-brain-audio-common-test1/` |
+| `brain-audio-load` | `/usr/local/sbin/brain-audio-load`（実行権限755） |
+| `brain-audio.service` | `/etc/systemd/system/brain-audio.service` |
+
+音声用koの内訳（配置先は上記リリースディレクトリの下です）:
+
+| 対応機種 | ko | 配置するサブディレクトリ |
+|---|---|---|
+| SH1/SH2 | `snd-soc-ymu818b.ko` | `kernel/sound/soc/codecs/` |
+| SH1/SH2 | `snd-soc-mxs-ymu818b.ko` | `kernel/sound/soc/mxs/` |
+| SH3〜SH7 | `brain-bu26154.ko` | `kernel/sound/soc/mxs/` |
+
+既存のタッチパネルやRTCなどのモジュールもカーネルのバージョンに依存するため、通常は `modules/` の一式を配置してください。旧カーネルのディレクトリにあるkoで代用しないでください。同じSDカードを7機種で使用する場合は、7個のDTBと音声3モジュールをすべて配置します。
+
+手動作業でも、元のカーネル・DTB・起動設定をバックアップしてからコピーしてください。`/boot`が読み取り専用の場合は書き込み可能にしてコピーし、書き込み後に`sync`して読み取り専用へ戻します。koはSDカードのLinuxルートファイルシステム側へ置きます。`/boot`へ置くだけではmodprobeから見つかりません。
+
+配置後は依存関係を生成して自動ロードを有効にします。
+
+```sh
+sudo chmod 755 /usr/local/sbin/brain-audio-load
+sudo depmod -a 5.4.149-brain-audio-common-test1
+sudo systemctl daemon-reload
+sudo systemctl enable brain-audio.service
+```
+
+従来の`/etc/modules`や`/etc/modules-load.d/*.conf`に音声モジュールの無条件ロード設定がある場合は、対象行を取り除いてください。再起動後、起動した機種のDTBに応じてサービスが必要なモジュールをロードします。これらの配置と設定をまとめて行うのが冒頭の`install.sh`です。
 
 ## 実機確認
 

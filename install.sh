@@ -34,7 +34,12 @@ systemctl is-enabled brain-audio.service > "$backup/previous-service-state" 2>&1
 chmod -R a+rX "$backup"
 printf 'Backup: %s\n' "$backup"
 mkdir -p /lib/modules
-tar --no-same-owner -xzf "modules-$release.tar.gz" -C /lib/modules
+if [ -d "modules/$release" ]; then
+    mkdir -p "/lib/modules/$release"
+    cp -a "modules/$release/." "/lib/modules/$release/"
+else
+    tar --no-same-owner -xzf "modules-$release.tar.gz" -C /lib/modules
+fi
 /sbin/depmod -a "$release"
 for module in snd-soc-ymu818b snd-soc-mxs-ymu818b brain-bu26154; do
     /sbin/modinfo -k "$release" -F vermagic "$module" | grep -q "^$release "
