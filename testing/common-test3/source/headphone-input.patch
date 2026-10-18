@@ -1,0 +1,15 @@
+--- a/sound/soc/mxs/brain-bu26154.c
++++ b/sound/soc/mxs/brain-bu26154.c
+@@ -454,7 +454,11 @@
+ 	const struct reg_sequence defaults[] = {
+ 		{ 0x12, 0 },
+ 		/* MAP1: connect left analog output to speaker, with 0 dB gain. */
+-		{ 0x1c, 1 }, { 0x84, 0x04 }, { 0x1c, 0 },
++		{ 0x1c, 1 },
++		/* CE: connect L-DAC to both headphone channels (mono source).
++		 * Select explicitly instead of relying on inherited CE routing.
++		 */
++		{ 0x82, 0x11 }, { 0x84, 0x04 }, { 0x1c, 0 },
+ 		{ 0x60, 0x80 }, { 0x62, 0x80 }, /* 16-bit PCM */
+ 		{ 0x26, class_d ? 0x95 : 0x15 }, /* speaker off */
+ 		{ 0x3a, 0x02 }, /* -24 dB analog output */
